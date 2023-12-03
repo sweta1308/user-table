@@ -39,11 +39,24 @@ export const userReducer = (state, { type, payload }) => {
         },
       };
     case "SELECT_ALL":
+      const notSelected = payload.filter(
+        (item) => !state.filters.checkedItems.includes(item)
+      );
       return {
         ...state,
         filters: {
           ...state.filters,
-          checkedItems: payload,
+          checkedItems: [...state.filters.checkedItems, ...notSelected],
+        },
+      };
+    case "UNSELECT_ALL":
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          checkedItems: state.filters.checkedItems.filter(
+            (item) => !payload.includes(item)
+          ),
         },
       };
     case "DELETE_ALL":
