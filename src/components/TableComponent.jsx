@@ -11,13 +11,22 @@ import { useUser } from "../context/UserContext";
 import { UserTableBody } from "./TableBody";
 
 export const TableComponent = ({ data }) => {
-  const { userState } = useUser();
+  const { userState, userDispatch } = useUser();
   const [userValue, setUserValue] = useState(null);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserValue({ ...userValue, [name]: value });
   };
-  const handleAllSelected = () => {};
+  const handleAllSelected = () => {
+    if (data.every(({ id }) => userState.filters.checkedItems.includes(id))) {
+      userDispatch({ type: "UNSELECT_ALL", payload: data.map(({ id }) => id) });
+    } else {
+      userDispatch({
+        type: "SELECT_ALL",
+        payload: data.map((item) => item.id),
+      });
+    }
+  };
   return (
     <>
       <div className="mt-[25px]">
@@ -28,9 +37,11 @@ export const TableComponent = ({ data }) => {
                 <TableCell sx={{ fontWeight: "bold" }}>
                   <input
                     type="checkbox"
-                    checked={data.every(({ id }) =>
-                      userState.filters.checkedItems.includes(id)
-                    )}
+                    checked={
+                      data.every(({ id }) =>
+                        userState.filters.checkedItems.includes(id)
+                      ) && userState.filters.checkedItems.length >= data.length
+                    }
                     onChange={handleAllSelected}
                   />
                 </TableCell>
