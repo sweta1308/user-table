@@ -17,7 +17,10 @@ export const SearchInput = () => {
         />
         <Tooltip title="Delete Selected">
           <button
-            onClick={() => userDispatch({ type: "DELETE_ALL" })}
+            onClick={() => {
+              userDispatch({ type: "DELETE_ALL" });
+              userDispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
+            }}
             className="bg-gray-200 p-[5px] rounded text-red-600 hover:text-red-700"
           >
             <DeleteForever />
